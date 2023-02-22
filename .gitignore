@@ -1,2 +1,6 @@
 venv
 *.pkl
+xlm-roberta-finetuned
+bert-finetuned
+new_models
+bert-uncased-large
