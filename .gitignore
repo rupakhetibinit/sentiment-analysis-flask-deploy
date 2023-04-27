@@ -4,3 +4,5 @@ newvenv
 xlm-roberta-finetuned
 bert-finetuned
 bert-uncased-large
+__pycache__
+.vs
