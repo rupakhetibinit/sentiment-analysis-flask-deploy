@@ -23,7 +23,7 @@ from transformers import AutoModelForSequenceClassification,AutoTokenizer
 # xlm_model = AutoModelForSequenceClassification.from_pretrained('./xlm-roberta-finetuned')
 # xlm_pipe = TextClassificationPipeline(model=xlm_model,tokenizer=xlm_tokenizer)
 bert_pipe = pipeline("text-classification",model="cruiser/distilbert-tweet-sentiment-finetuned")
-roberta_pipe = pipeline("text-classification",model="cruiser/twitter-roberta-tweet-sentiment-finetuned")
+# roberta_pipe = pipeline("text-classification",model="cruiser/twitter-roberta-tweet-sentiment-finetuned")
 
 def data_preprocessing(text):
     text = text.lower()
@@ -43,11 +43,11 @@ def stemming(data):
 app = Flask(__name__)
 cors = CORS(app)
 
-vect = load('new_models/vectorizer.pkl')
-mnb = load('new_models/mnb.pkl')
-svm = load('new_models/svm.pkl')
-rfclf = load('new_models/rfclf.pkl')
-lr = load("new_models/lrmodel.pkl")
+# vect = load('new_models/vectorizer.pkl')
+# mnb = load('new_models/mnb.pkl')
+# svm = load('new_models/svm.pkl')
+# rfclf = load('new_models/rfclf.pkl')
+# lr = load("new_models/lrmodel.pkl")
 
 def get_sentiment(x):
     if x == 1: 
@@ -123,54 +123,54 @@ def predict():
 
 
 
-
+# send request to this route for actual inference
 @app.route('/test',methods=["POST"])
 def sentiment():
     data = request.json
     id=data["id"]
     value = data["text"]
     def preprocess_entire_data(value,id):
-        processed_input = data_preprocessing(value)
-        stemmed_input = stemming(processed_input)
-        vectorized = vect.transform([stemmed_input])
-        prediction1 = mnb.predict(vectorized)
-        prediction2 = svm.predict(vectorized)
-        prediction3 = rfclf.predict(vectorized)
-        prediction4 = lr.predict(vectorized)
+        # processed_input = data_preprocessing(value)
+        # stemmed_input = stemming(processed_input)
+        # vectorized = vect.transform([stemmed_input])
+        # prediction1 = mnb.predict(vectorized)
+        # prediction2 = svm.predict(vectorized)
+        # prediction3 = rfclf.predict(vectorized)
+        # prediction4 = lr.predict(vectorized)
         print("preprocessing")
 
         return {
             "id":id,
             "tweet":value,
             "models":[
-                {
-                    "model_id":0,
-                    "name":"Multinomial Naive Bayes",
-                    "prediction":get_sentiment(prediction1[0])
-                },                {
-                    "model_id":1,
-                    "name":"Support Vector Machine",
-                    "prediction":get_sentiment(prediction2[0])
-                },{
-                    "model_id":2,
-                    "name":"Random Forest Classifier",
-                    "prediction":get_sentiment(prediction3[0]),
-                },
-                {
-                    "model_id:":3,
-                    "name":"Logistic Regression",
-                    "prediction":get_sentiment(prediction4[0])
-                },
+                # {
+                #     "model_id":0,
+                #     "name":"Multinomial Naive Bayes",
+                #     "prediction":get_sentiment(prediction1[0])
+                # },                {
+                #     "model_id":1,
+                #     "name":"Support Vector Machine",
+                #     "prediction":get_sentiment(prediction2[0])
+                # },{
+                #     "model_id":2,
+                #     "name":"Random Forest Classifier",
+                #     "prediction":get_sentiment(prediction3[0]),
+                # },
+                # {
+                #     "model_id:":3,
+                #     "name":"Logistic Regression",
+                #     "prediction":get_sentiment(prediction4[0])
+                # },
                 {
                     "model_id":4,
                     "name":"BERT Finetuned",
                     "prediction":bert_pipe(value)[0]["label"]
                 },
-                {
-                    "model_id":5,
-                    "name":"Twitter Roberta Finetuned",
-                    "prediction":roberta_pipe(value)[0]["label"]
-                }
+                # {
+                #     "model_id":5,
+                #     "name":"Twitter Roberta Finetuned",
+                #     "prediction":roberta_pipe(value)[0]["label"]
+                # }
             ]
         }
     result = preprocess_entire_data(value,id)

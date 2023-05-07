@@ -6,3 +6,4 @@ bert-finetuned
 bert-uncased-large
 __pycache__
 .vs
+new_models.zip
